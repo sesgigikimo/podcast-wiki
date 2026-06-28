@@ -23,6 +23,13 @@
     box-shadow: 0 1px 8px rgba(0,0,0,.03);
   }
   header h1 { margin: 0 0 12px; font-size: 20px; color: var(--accent); }
+  .header-top { max-width: 860px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .race-link {
+    font-family: inherit; font-size: 13px; padding: 6px 14px; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 999px; background: var(--card);
+    color: var(--goo); text-decoration: none; transition: all .15s;
+  }
+  .race-link:hover { background: var(--goo); color: #fff; border-color: var(--goo); }
   /* 頻道頁籤 */
   .tabs { max-width: 860px; margin: 0 auto 12px; display: flex; gap: 6px; flex-wrap: wrap; }
   .tab {
@@ -132,7 +139,9 @@
 </head>
 <body>
 <header>
-  <h1>🎙️ Podcast Wiki</h1>
+  <div class="header-top">
+    <h1>🎙️ Podcast Wiki</h1>
+  </div>
   <div class="tabs" id="tabs">
     <button class="tab active" data-ch="all">全部</button>
     <button class="tab" data-ch="dareng">🎧 大仁來開槓</button>
