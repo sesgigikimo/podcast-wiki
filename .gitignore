@@ -1,0 +1,5 @@
+# repo 只放 index.html + episodes.json（原始逐字稿/文章/工具腳本留在本機就好）
+__pycache__/
+transcripts/
+build_wiki.py
+fetch_new_episodes.py
