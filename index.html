@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Podcast Wiki — 大仁來開槓 ＋ 股癌 ＋ 新聞大視野</title>
+<title>Podcast Wiki — 大仁來開槓 ＋ 股癌 ＋ 新聞大視野 ＋ 博音</title>
 <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
 <style>
   :root {
@@ -11,6 +11,7 @@
     --muted: #8a8a7a; --accent: #2f6b3a; --accent-soft: #eef5ef; --hl: #fff3a8;
     --goo: #b8651e; --goo-soft: #fbf0e6;
     --news: #2b5d8a; --news-soft: #eaf2fa;
+    --bpt: #7a3d9c; --bpt-soft: #f3ebf8;
   }
   * { box-sizing: border-box; }
   body {
@@ -44,6 +45,7 @@
   }
   .tab[data-ch="gooaye"].active { background: var(--goo); border-color: var(--goo); }
   .tab[data-ch="news"].active { background: var(--news); border-color: var(--news); }
+  .tab[data-ch="brianptseng"].active { background: var(--bpt); border-color: var(--bpt); }
   .search-wrap { max-width: 860px; margin: 0 auto; position: relative; }
   .search-wrap input {
     width: 100%; padding: 12px 16px 12px 42px; font-size: 16px;
@@ -72,6 +74,7 @@
   .ep-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.06); }
   .ep-card[data-ch="gooaye"] { border-left: 3px solid var(--goo); }
   .ep-card[data-ch="news"] { border-left: 3px solid var(--news); }
+  .ep-card[data-ch="brianptseng"] { border-left: 3px solid var(--bpt); }
   .ep-head {
     padding: 16px 18px; cursor: pointer; display: flex; gap: 14px; align-items: flex-start;
   }
@@ -82,6 +85,7 @@
   }
   .ep-card[data-ch="gooaye"] .ep-badge { background: var(--goo-soft); color: var(--goo); }
   .ep-card[data-ch="news"] .ep-badge { background: var(--news-soft); color: var(--news); min-width: 64px; font-size: 12px; }
+  .ep-card[data-ch="brianptseng"] .ep-badge { background: var(--bpt-soft); color: var(--bpt); }
   .ep-info { flex: 1; min-width: 0; }
   .ep-title { font-size: 16px; font-weight: 600; margin: 0 0 4px; line-height: 1.4; }
   .ep-date { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
@@ -100,6 +104,18 @@
     transition: transform .2s;
   }
   .ep-card.open .ep-arrow { transform: rotate(90deg); }
+  .ep-permalink {
+    flex-shrink: 0; font-family: inherit; font-size: 12px; padding: 4px 10px;
+    cursor: pointer; border: 1px solid var(--border); border-radius: 999px;
+    background: var(--bg); color: var(--muted); white-space: nowrap;
+    align-self: flex-start; margin-top: 2px; transition: all .12s;
+  }
+  .ep-permalink:hover { border-color: var(--accent); color: var(--accent); }
+  .back-link {
+    display: inline-block; margin-bottom: 14px; font-size: 14px; color: var(--accent);
+    cursor: pointer; text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
 
   /* 標的 tag badges（股癌） */
   .tag-row { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
@@ -111,6 +127,8 @@
   .tag:hover { background: var(--goo); color: #fff; }
   .ep-card[data-ch="news"] .tag { background: var(--news-soft); color: var(--news); border-color: #c9dcec; }
   .ep-card[data-ch="news"] .tag:hover { background: var(--news); color: #fff; }
+  .ep-card[data-ch="brianptseng"] .tag { background: var(--bpt-soft); color: var(--bpt); border-color: #ddc4e8; }
+  .ep-card[data-ch="brianptseng"] .tag:hover { background: var(--bpt); color: #fff; }
 
   .ep-body {
     display: none; padding: 0 18px 18px; border-top: 1px solid var(--border);
@@ -125,6 +143,7 @@
   }
   .ep-card[data-ch="gooaye"] .ep-body h2 { color: var(--goo); }
   .ep-card[data-ch="news"] .ep-body h2 { color: var(--news); }
+  .ep-card[data-ch="brianptseng"] .ep-body h2 { color: var(--bpt); }
   .ep-body h3 { font-size: 15px; margin: 18px 0 8px; }
   .ep-body p { margin: 8px 0; }
   .ep-body ul, .ep-body ol { padding-left: 22px; margin: 8px 0; }
@@ -154,6 +173,7 @@
     <button class="tab" data-ch="dareng">🎧 大仁來開槓</button>
     <button class="tab" data-ch="gooaye">📈 股癌</button>
     <button class="tab" data-ch="news">📰 新聞大視野</button>
+    <button class="tab" data-ch="brianptseng">🎙️ 博音</button>
   </div>
   <div class="search-wrap">
     <input id="search" type="text" placeholder="搜尋關鍵字（標題、日期、全文、標的…）" autocomplete="off">
@@ -226,11 +246,15 @@ function findSnippets(md, q, limit = 4){
   return out;
 }
 
-function renderCard(ep, q){
+function epKey(ep){ return ep.channel + '-' + ep.ep; }
+
+function renderCard(ep, q, opts){
+  opts = opts || {};
   const tHit = highlight(ep.title, q);
   const card = document.createElement('div');
   card.className = 'ep-card';
   card.dataset.ch = ep.channel;
+  card.id = 'ep-' + epKey(ep);
   // 搜尋時：用命中片段取代預設摘要；沒搜尋時顯示原摘要
   let previewHtml;
   if(q){
@@ -263,13 +287,19 @@ function renderCard(ep, q){
         ${previewHtml}
         ${tagHtml}
       </div>
+      <button class="ep-permalink" type="button">📄 獨立頁面</button>
       <div class="ep-arrow">▶</div>
     </div>
     <div class="ep-body"></div>`;
   const head = card.querySelector('.ep-head');
   const body = card.querySelector('.ep-body');
+  const permalinkBtn = card.querySelector('.ep-permalink');
+  permalinkBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    location.hash = epKey(ep);
+  });
   let rendered = false;
-  head.addEventListener('click', () => {
+  const openCard = () => {
     const open = card.classList.toggle('open');
     if(open && !rendered){
       // marked 渲染全文
@@ -284,7 +314,9 @@ function renderCard(ep, q){
         }
       }
     }
-  });
+  };
+  head.addEventListener('click', openCard);
+  if(opts.forceOpen && !card.classList.contains('open')) openCard();
   // 點 tag badge → 直接搜尋該標的
   card.querySelectorAll('.tag').forEach(t => {
     t.addEventListener('click', e => {
@@ -343,7 +375,33 @@ function getSorter(){
   };
 }
 
+// 網址帶 #channel-ep 時，只顯示該篇的獨立頁面
+function getHashKey(){
+  return decodeURIComponent(location.hash.replace(/^#/, ''));
+}
+
+function renderSingle(ep){
+  listEl.innerHTML = '';
+  const back = document.createElement('a');
+  back.className = 'back-link';
+  back.textContent = '← 返回列表';
+  back.href = '#';
+  back.addEventListener('click', e => {
+    e.preventDefault();
+    location.hash = '';
+  });
+  listEl.appendChild(back);
+  listEl.appendChild(renderCard(ep, '', { forceOpen: true }));
+  countEl.textContent = `獨立頁面：${ep.title}`;
+}
+
 function render(){
+  const hashKey = getHashKey();
+  if(hashKey){
+    const ep = EPS.find(e => epKey(e) === hashKey);
+    if(ep){ renderSingle(ep); return; }
+    // 找不到對應集數就當作沒有 hash，退回列表
+  }
   const q = searchEl.value.trim();
   const ql = q.toLowerCase();
   const sorted = [...EPS].sort(getSorter());
@@ -364,9 +422,8 @@ function render(){
     shown++;
   }
   listEl.appendChild(frag);
-  const chLabel = activeChannel === 'all' ? '' :
-    (activeChannel === 'dareng' ? '大仁來開槓 ' :
-     activeChannel === 'gooaye' ? '股癌 ' : '新聞大視野 ');
+  const CH_LABELS = { dareng: '大仁來開槓 ', gooaye: '股癌 ', news: '新聞大視野 ', brianptseng: '博音 ' };
+  const chLabel = activeChannel === 'all' ? '' : (CH_LABELS[activeChannel] || '');
   countEl.textContent = q ? `搜尋「${q}」→ ${shown} 集命中` : `${chLabel}共 ${shown} 集`;
   if(shown === 0){
     listEl.innerHTML = `<div class="empty">沒有找到符合「${escapeHtml(q)}」的內容</div>`;
@@ -387,6 +444,7 @@ fetch('episodes.json?_=' + Date.now())
 
 searchEl.addEventListener('input', render);
 sortEl.addEventListener('change', render);
+window.addEventListener('hashchange', render);
 
 // 頻道頁籤切換
 tabsEl.addEventListener('click', e => {
