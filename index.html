@@ -169,9 +169,9 @@
     <h1>🎙️ Podcast Wiki</h1>
   </div>
   <div class="tabs" id="tabs">
-    <button class="tab active" data-ch="all">全部</button>
+    <button class="tab" data-ch="all">全部</button>
     <button class="tab" data-ch="dareng">🎧 大仁來開槓</button>
-    <button class="tab" data-ch="gooaye">📈 股癌</button>
+    <button class="tab active" data-ch="gooaye">📈 股癌</button>
     <button class="tab" data-ch="news">📰 新聞大視野</button>
     <button class="tab" data-ch="brianptseng">🎙️ 博音</button>
   </div>
@@ -194,7 +194,7 @@
 
 <script>
 let EPS = [];
-let activeChannel = 'all';   // 當前選中的頻道頁籤
+let activeChannel = 'gooaye';   // 當前選中的頻道頁籤
 const listEl = document.getElementById('list');
 const searchEl = document.getElementById('search');
 const sortEl = document.getElementById('sort');
