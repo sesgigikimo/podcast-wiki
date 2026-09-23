@@ -3,3 +3,4 @@ __pycache__/
 transcripts/
 build_wiki.py
 fetch_new_episodes.py
+.gstack/
