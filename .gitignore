@@ -5,3 +5,5 @@ build_wiki.py
 fetch_new_episodes.py
 .gstack/
 backfill_gooaye.py
+build_approved.py
+approved_gooaye.txt
