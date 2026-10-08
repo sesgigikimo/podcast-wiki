@@ -4,3 +4,4 @@ transcripts/
 build_wiki.py
 fetch_new_episodes.py
 .gstack/
+backfill_gooaye.py
