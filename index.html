@@ -12,6 +12,7 @@
     --goo: #b8651e; --goo-soft: #fbf0e6;
     --news: #2b5d8a; --news-soft: #eaf2fa;
     --bpt: #7a3d9c; --bpt-soft: #f3ebf8;
+    --rms: #b8860b; --rms-soft: #fbf5e1;
   }
   * { box-sizing: border-box; }
   body {
@@ -46,6 +47,7 @@
   .tab[data-ch="gooaye"].active { background: var(--goo); border-color: var(--goo); }
   .tab[data-ch="news"].active { background: var(--news); border-color: var(--news); }
   .tab[data-ch="brianptseng"].active { background: var(--bpt); border-color: var(--bpt); }
+  .tab[data-ch="remus"].active { background: var(--rms); border-color: var(--rms); }
   .search-wrap { max-width: 860px; margin: 0 auto; position: relative; }
   .search-wrap input {
     width: 100%; padding: 12px 16px 12px 42px; font-size: 16px;
@@ -75,6 +77,7 @@
   .ep-card[data-ch="gooaye"] { border-left: 3px solid var(--goo); }
   .ep-card[data-ch="news"] { border-left: 3px solid var(--news); }
   .ep-card[data-ch="brianptseng"] { border-left: 3px solid var(--bpt); }
+  .ep-card[data-ch="remus"] { border-left: 3px solid var(--rms); }
   .ep-head {
     padding: 16px 18px; cursor: pointer; display: flex; gap: 14px; align-items: flex-start;
   }
@@ -86,6 +89,7 @@
   .ep-card[data-ch="gooaye"] .ep-badge { background: var(--goo-soft); color: var(--goo); }
   .ep-card[data-ch="news"] .ep-badge { background: var(--news-soft); color: var(--news); min-width: 64px; font-size: 12px; }
   .ep-card[data-ch="brianptseng"] .ep-badge { background: var(--bpt-soft); color: var(--bpt); }
+  .ep-card[data-ch="remus"] .ep-badge { background: var(--rms-soft); color: var(--rms); }
   .ep-info { flex: 1; min-width: 0; }
   .ep-title { font-size: 16px; font-weight: 600; margin: 0 0 4px; line-height: 1.4; }
   .ep-date { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
@@ -129,6 +133,8 @@
   .ep-card[data-ch="news"] .tag:hover { background: var(--news); color: #fff; }
   .ep-card[data-ch="brianptseng"] .tag { background: var(--bpt-soft); color: var(--bpt); border-color: #ddc4e8; }
   .ep-card[data-ch="brianptseng"] .tag:hover { background: var(--bpt); color: #fff; }
+  .ep-card[data-ch="remus"] .tag { background: var(--rms-soft); color: var(--rms); border-color: #ecdca8; }
+  .ep-card[data-ch="remus"] .tag:hover { background: var(--rms); color: #fff; }
 
   .ep-body {
     display: none; padding: 0 18px 18px; border-top: 1px solid var(--border);
@@ -144,6 +150,7 @@
   .ep-card[data-ch="gooaye"] .ep-body h2 { color: var(--goo); }
   .ep-card[data-ch="news"] .ep-body h2 { color: var(--news); }
   .ep-card[data-ch="brianptseng"] .ep-body h2 { color: var(--bpt); }
+  .ep-card[data-ch="remus"] .ep-body h2 { color: var(--rms); }
   .ep-body h3 { font-size: 15px; margin: 18px 0 8px; }
   .ep-body p { margin: 8px 0; }
   .ep-body ul, .ep-body ol { padding-left: 22px; margin: 8px 0; }
@@ -174,6 +181,7 @@
     <button class="tab active" data-ch="gooaye">📈 股癌</button>
     <button class="tab" data-ch="news">📰 新聞大視野</button>
     <button class="tab" data-ch="brianptseng">🎙️ 博音</button>
+    <button class="tab" data-ch="remus">⚡ 雷老闆</button>
   </div>
   <div class="search-wrap">
     <input id="search" type="text" placeholder="搜尋關鍵字（標題、日期、全文、標的…）" autocomplete="off">
@@ -422,7 +430,7 @@ function render(){
     shown++;
   }
   listEl.appendChild(frag);
-  const CH_LABELS = { dareng: '大仁來開槓 ', gooaye: '股癌 ', news: '新聞大視野 ', brianptseng: '博音 ' };
+  const CH_LABELS = { dareng: '大仁來開槓 ', gooaye: '股癌 ', news: '新聞大視野 ', brianptseng: '博音 ', remus: '雷老闆 ' };
   const chLabel = activeChannel === 'all' ? '' : (CH_LABELS[activeChannel] || '');
   countEl.textContent = q ? `搜尋「${q}」→ ${shown} 集命中` : `${chLabel}共 ${shown} 集`;
   if(shown === 0){
