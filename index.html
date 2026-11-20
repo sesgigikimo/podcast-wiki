@@ -288,7 +288,7 @@ function renderCard(ep, q, opts){
   }
   card.innerHTML = `
     <div class="ep-head">
-      <div class="ep-badge">${ep.channel === 'news' ? (ep.date ? ep.date.slice(5) : '新聞') : 'EP.' + ep.ep}</div>
+      <div class="ep-badge">${ep.channel === 'news' ? (ep.date ? ep.date.slice(5) : '新聞') : (/^\D/.test(String(ep.ep)) ? ep.ep : 'EP.' + ep.ep)}</div>
       <div class="ep-info">
         <h3 class="ep-title">${tHit}</h3>
         <div class="ep-date">📅 ${ep.date || '日期未知'}</div>
@@ -372,11 +372,19 @@ function highlightAll(root, q){
   return firstMark;
 }
 
+// 集數排序：同系列比數字；不同系列（雷老闆直播 86 vs podcast P128）改比日期，才不會混排錯亂
+function epCmp(a, b){
+  const pa = String(a.ep).match(/^(\D*)(\d+)/) || ['', '', '0'];
+  const pb = String(b.ep).match(/^(\D*)(\d+)/) || ['', '', '0'];
+  if(pa[1] !== pb[1]) return (a.date||'').localeCompare(b.date||'');
+  return Number(pa[2]) - Number(pb[2]);
+}
+
 function getSorter(){
   const v = sortEl.value;
   return (a,b) => {
-    if(v === 'ep-desc') return b.ep - a.ep;
-    if(v === 'ep-asc')  return a.ep - b.ep;
+    if(v === 'ep-desc') return epCmp(b, a);
+    if(v === 'ep-asc')  return epCmp(a, b);
     if(v === 'date-desc') return (b.date||'').localeCompare(a.date||'');
     if(v === 'date-asc')  return (a.date||'').localeCompare(b.date||'');
     return 0;
